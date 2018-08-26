@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.min.js"></script>
+    <script>
+        var config = {
+            type: Phaser.AUTO,
+            width: 400,
+            height: 200,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                gravity: { y: 500 }
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create
+            }
+        };
+
+        function preload () {
+            this.load.setBaseURL('http://labs.phaser.io');  // enables loading assets from the phaser labs site
+            this.load.image('reddot', 'assets/particles/red.png');
+            this.load.image('bluedot', 'assets/particles/blue.png');
+        }
+
+        function create () {
+            var redDot = this.physics.add.image(400, 100, 'reddot');
+            redDot.setScale(0.25);
+            redDot.setVelocity(500, 10);
+            redDot.setBounce(1, 1);
+            redDot.setCollideWorldBounds(true);
+            
+            var blueDot = this.physics.add.image(100, 100, 'bluedot');
+            blueDot.setScale(0.25);
+            blueDot.setVelocity(100, 500);
+            blueDot.setBounce(1, 1);
+            blueDot.setCollideWorldBounds(true);
+            
+            this.physics.add.collider(redDot, blueDot);
+        }
+        
+        var game = new Phaser.Game(config);
+    
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
