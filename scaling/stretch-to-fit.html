@@ -9,8 +9,8 @@
     <script>
         var config = {
             type: Phaser.AUTO,
-            width: 400,
-            height: 200,
+            width: window.innerWidth,
+            height: window.innerHeight,
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -43,10 +43,23 @@
             blueDot.setCollideWorldBounds(true);
             
             this.physics.add.collider(redDot, blueDot);
+            this.events.on('resize', resize, this);
+        }
+
+        function resize (width, height) {
+            if (width === undefined) { width = this.sys.game.config.width; }
+            if (height === undefined) { height = this.sys.game.config.height; }
+
+            this.cameras.resize(width, height);
+            this.physics.world.setBounds(0,0, width, height);
         }
         
         var game = new Phaser.Game(config);
     
+        // listen for browser resize and invoke the game's resize function
+        window.addEventListener('resize', function (event) {
+            game.resize(window.innerWidth, window.innerHeight);
+        }, false);
     </script>
 </head>
 <body>
