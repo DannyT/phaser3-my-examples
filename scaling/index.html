@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.min.js"></script>
     <script>
         var config = {
             type: Phaser.AUTO,
@@ -24,7 +24,7 @@
         };
 
         function preload () {
-            this.load.setBaseURL('http://labs.phaser.io');  // enables loading assets from the phaser labs site
+            this.load.setBaseURL('//labs.phaser.io');  // enables loading assets from the phaser labs site
             this.load.image('reddot', 'assets/particles/red.png');
             this.load.image('bluedot', 'assets/particles/blue.png');
         }
