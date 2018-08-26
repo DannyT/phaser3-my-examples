@@ -1,3 +1,7 @@
 ## Phaser 3 examples
 
-A bunch of examples and experiments in Phaser 3
+Some examples and experiments in Phaser 3
+
+### [Scaling](/scaling)
+
+Some game scaling options for different browser window sizes.
