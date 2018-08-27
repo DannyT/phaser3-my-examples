@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Player - Top Down</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.min.js"></script>
+    <script>
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 }
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        function preload () {
+            // animation spritesheet (create at http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/)
+            this.load.spritesheet('player', '../assets/hipster-orc.png', { frameWidth: 64, frameHeight: 64 });
+            // animation data
+            this.load.json('player-anims', '../assets/hipster-orc-anims.json');
+        }
+
+        function create () {
+            // create animations from data
+            var data = this.cache.json.get('player-anims');
+            this.anims.fromJSON(data);
+
+            // set up keyboard input
+            this.cursors = this.input.keyboard.createCursorKeys();
+            this.wasd = this.input.keyboard.addKeys({
+                up: Phaser.Input.Keyboard.KeyCodes.W,
+                down: Phaser.Input.Keyboard.KeyCodes.S,
+                left: Phaser.Input.Keyboard.KeyCodes.A,
+                right: Phaser.Input.Keyboard.KeyCodes.D
+            });
+
+
+            // set up mouse/touch input
+            this.pointerIsActive = false;
+
+            this.input.on('pointerdown', (pointer, gameObject) => {
+                this.pointerIsActive = true;          
+            });
+            this.input.on('pointerup', (pointer, gameObject) => {
+                this.pointerIsActive = false;
+            });
+
+            // create physics sprite
+            this.player = this.physics.add.sprite(100, 100, 'player');
+            this.player.setCollideWorldBounds(true);
+            this.idleState = 'idle-down';
+            this.player.play(this.idleState);
+        }
+
+        function update() {
+            this.player.setVelocity(0);
+
+            // handle keyboard input
+            if (this.cursors.up.isDown || this.wasd.up.isDown) {
+                this.player.setVelocityY(-300);
+            }
+            else if (this.cursors.down.isDown || this.wasd.down.isDown) {
+                this.player.setVelocityY(300);
+            }
+
+            if (this.cursors.left.isDown || this.wasd.left.isDown) {
+                this.player.setVelocityX(-300);
+            }
+            else if (this.cursors.right.isDown || this.wasd.right.isDown) {
+                this.player.setVelocityX(300);
+            }
+
+            // handle pointer input
+            var angle = 0;
+            if(this.pointerIsActive && this.input.activePointer.isDown && this.input.activePointer.leftButtonDown()) {
+                // get angle between player and touch point
+                angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.player.x, this.player.y, this.input.activePointer.worldX, this.input.activePointer.worldY));
+
+                // up/down
+                if(angle > -150 && angle < -30) {
+                    this.player.setVelocityY(-300);
+                } else if (angle > 30 && angle < 150) {
+                    this.player.setVelocityY(300);
+                }
+                // left/right
+                if (angle > 120 || angle < -120) {
+                    this.player.setVelocityX(-300);
+                } else if(angle > -60 && angle < 60) {
+                    this.player.setVelocityX(300);
+                }
+            }
+
+            // set the animation based on current velocity
+            if(this.player.body.velocity.x > 0) {
+                this.player.play('walk-right', true);
+                this.idleState = 'idle-right'; // we store the direction to show the correct idle direction when we stop moving
+            } else if(this.player.body.velocity.x < 0) {
+                this.player.play('walk-left', true);
+                this.idleState = 'idle-left';
+            }
+            if(this.player.body.velocity.x == 0) {
+                if(this.player.body.velocity.y < 0) {
+                    this.player.play('walk-up', true);
+                    this.idleState = 'idle-up';
+                } else if(this.player.body.velocity.y > 0) {
+                    this.player.play('walk-down', true);
+                    this.idleState = 'idle-down';
+                }
+                if(this.player.body.velocity.y == 0) {
+                    this.player.play(this.idleState, true);
+                }
+            }
+        }
+        
+        var game = new Phaser.Game(config);
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
