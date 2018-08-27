@@ -1,3 +1,5 @@
+[< Home](../)
+
 ## Scaling
 
 Scaling your game to different browser window sizes.

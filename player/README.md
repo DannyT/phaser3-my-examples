@@ -1,3 +1,5 @@
+[< Home](../)
+
 ## Player
 
 Handling input to control a player avatar.
